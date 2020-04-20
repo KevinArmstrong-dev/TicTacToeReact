@@ -4,6 +4,7 @@ import './index.css';
 
 
 function Square(props) {
+
   return (
     <button className="square" onClick={props.onClick} >
       {props.value}
@@ -46,6 +47,7 @@ class Board extends React.Component {
 }
 
 class Game extends React.Component {
+ 
   constructor(props) {
     super(props);
     this.state = {
@@ -53,8 +55,9 @@ class Game extends React.Component {
         squares: Array(9).fill(null),
       }],
       xIsNext: true,
-      stepNumber : 0,
-      playedPos : 0,
+      stepNumber: 0,
+      playedPos: 0,
+      //coordinate: Array().fill(null),
     };
   }
 
@@ -72,33 +75,33 @@ class Game extends React.Component {
       history: history.concat([{
         squares: squares,
       }]),
-      stepNumber : history.length,
+      stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
-      playedPos : i,
+      playedPos: i,
+      coordinate : convertToCoordinates(i),
     })
   }
 
-  jumpTo(step){
+  jumpTo(step) {
     this.setState({
-      stepNumber : step,
-      xIsNext : (step % 2) === 0,
+      stepNumber: step,
+      xIsNext: (step % 2) === 0,
     });
   }
-
   render() {
 
     const history = this.state.history;
     const current = history[history.length - 1];
     const winner = calculateWinner(current.squares);
 
-    const moves = history.map((step,move) => {
-      const desc = move ? 
-      'Go to move #' + move :
-      'Go to game start' ;
+    const moves = history.map((step, move) => {
+      const desc = move ?
+        'Go to move #' + move :
+        'Go to game start';
 
       return (
         <li key={move}>
-          <button onClick= {() => this.jumpTo(move)}>{desc}</button>
+          <button onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
     }
@@ -106,14 +109,14 @@ class Game extends React.Component {
     )
     let status;
     if (winner) {
-      if(winner === 'TIE'){
+      if (winner === 'TIE') {
         status = 'GAME: ' + winner;
-      }else{
+      } else {
         status = 'Winner: ' + winner;
       }
-    
+
     } else {
-      status = 'Next PLayer: ' + (this.state.xIsNext ? 'X' : 'O') +" Position" +this.state.playedPos;
+      status = 'Next PLayer: ' + (this.state.xIsNext ? 'X' : 'O');
     }
 
     return (
@@ -152,19 +155,53 @@ function calculateWinner(squares) {
     }
   }
 
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] == null ||  squares[b] == null ||squares[c] == null) {
-      tieCheck =  null;
-    }else{
+  for (let j = 0; j < lines.length; j++) {
+    if (!squares[j]) {
+      return null;
+    } else {
       tieCheck = 'TIE';
     }
   }
 
-  if(tieCheck){
+  if (tieCheck) {
     return tieCheck;
   }
-  return null;
+  return null; //Statement may not be reached
+}
+
+function convertToCoordinates(index) {
+  switch (index) {
+    case 0:
+      return "(0,0)";
+
+    case 1:
+      return "(1,0)";
+
+    case 2:
+      return "(2,0)";
+
+    case 3:
+      return "(1,0)";
+
+    case 4:
+      return "(1,1)";
+
+    case 5:
+      return "(1,2)";
+
+
+    case 6:
+      return "(2,0)";
+
+    case 7:
+      return "(2,1)";
+
+    case 8:
+      return "(2,2)";
+
+    default:
+      break;
+  }
 }
 
 // ========================================
