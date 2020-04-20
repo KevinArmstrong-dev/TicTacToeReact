@@ -54,6 +54,7 @@ class Game extends React.Component {
       }],
       xIsNext: true,
       stepNumber : 0,
+      playedPos : 0,
     };
   }
 
@@ -73,6 +74,7 @@ class Game extends React.Component {
       }]),
       stepNumber : history.length,
       xIsNext: !this.state.xIsNext,
+      playedPos : i,
     })
   }
 
@@ -104,9 +106,14 @@ class Game extends React.Component {
     )
     let status;
     if (winner) {
-      status = 'Winner: ' + winner;
+      if(winner === 'TIE'){
+        status = 'GAME: ' + winner;
+      }else{
+        status = 'Winner: ' + winner;
+      }
+    
     } else {
-      status = 'Next PLayer: ' + (this.state.xIsNext ? 'X' : 'O');
+      status = 'Next PLayer: ' + (this.state.xIsNext ? 'X' : 'O') +" Position" +this.state.playedPos;
     }
 
     return (
@@ -127,6 +134,7 @@ class Game extends React.Component {
 }
 
 function calculateWinner(squares) {
+  let tieCheck = null;
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -142,6 +150,19 @@ function calculateWinner(squares) {
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return squares[a];
     }
+  }
+
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] == null ||  squares[b] == null ||squares[c] == null) {
+      tieCheck =  null;
+    }else{
+      tieCheck = 'TIE';
+    }
+  }
+
+  if(tieCheck){
+    return tieCheck;
   }
   return null;
 }
